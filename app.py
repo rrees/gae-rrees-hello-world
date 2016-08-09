@@ -1,11 +1,18 @@
-import webapp2
+import logging
+
+from flask import Flask
 
 
-class MainPage(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('Hello, World!')
+app = Flask(__name__)
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-], debug=True)
+
+@app.route('/')
+def hello():
+    return 'Hello World!'
+
+
+@app.errorhandler(500)
+def server_error(e):
+    # Log the error and stacktrace.
+    logging.exception('An error occurred during a request.')
+    return 'An internal error occurred.', 500
